@@ -4,21 +4,20 @@ import java.nio.file.Paths;
 
 public class FileTool {
 
-    public static String readFileToString(String filePath) {
-        String content = "";
+    public static byte[] readFileToString(String filePath) {
         try {
-            content = new String(Files.readAllBytes(Paths.get(filePath)));
+            return Files.readAllBytes(Paths.get(filePath));
         } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+            System.out.println("IOException: " + e.getMessage());
         }
-        System.out.println(content);
-        return content;
+        return null;
     }
-    public static void writeStringToFile(String filePath, String content) {
+
+    public static void writeStringToFile(String filePath, byte[] content) {
         try {
-            Files.write(Paths.get(filePath), content.getBytes());
+            Files.write(Paths.get(filePath), content);
         } catch (IOException e) {
-            System.err.println("Error writing to file: " + e.getMessage());
+            System.out.println("IOException: " + e.getMessage());
         }
     }
 }

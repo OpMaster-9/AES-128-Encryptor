@@ -8,30 +8,27 @@ import java.security.spec.KeySpec;
 import java.util.Base64;
 
 public class Encryption {
-    public static String encrypt(String text, String password) throws Exception {
+    public static byte[] encrypt(byte[] data, String password) throws Exception {
         byte[] salt = generateSalt();
         SecretKey secretKey = StringToSecretKey(password, salt);
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        byte[] encryptedText = cipher.doFinal(text.getBytes());
-        byte[] combined = new byte[salt.length + encryptedText.length];
+        byte[] encryptedData = cipher.doFinal(data);
+        byte[] combined = new byte[salt.length + encryptedData.length];
         System.arraycopy(salt, 0, combined, 0, salt.length);
-        System.arraycopy(encryptedText, 0, combined, salt.length, encryptedText.length);
-        return Base64.getEncoder().encodeToString(combined);
+        System.arraycopy(encryptedData, 0, combined, salt.length, encryptedData.length);
+        return combined;
     }
 
-    public static String decrypt(String encryptedText, String password) throws Exception {
-        byte[] decodedText = Base64.getDecoder().decode(encryptedText);
+    public static byte[] decrypt(byte[] encryptedData, String password) throws Exception {
         byte[] salt = new byte[16];
-        System.arraycopy(decodedText, 0, salt, 0, salt.length);
-        byte[] encryptedData = new byte[decodedText.length - salt.length];
-        System.arraycopy(decodedText, salt.length, encryptedData, 0, encryptedData.length);
+        System.arraycopy(encryptedData, 0, salt, 0, salt.length);
+        byte[] data = new byte[encryptedData.length - salt.length];
+        System.arraycopy(encryptedData, salt.length, data, 0, data.length);
         SecretKey secretKey = StringToSecretKey(password, salt);
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        byte[] decryptedText = cipher.doFinal(encryptedData);
-
-        return new String(decryptedText);
+        return cipher.doFinal(data);
     }
     private static SecretKey StringToSecretKey(String password, byte[] salt) throws Exception {
         int iterationCount = 65536;

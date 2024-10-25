@@ -77,8 +77,8 @@ public class GUI {
         encrypt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String originalText = FileTool.readFileToString(directory + file);
-                String encryptedText;
+                byte[] originalText = FileTool.readFileToString(directory + file);
+                byte[] encryptedText;
                 try {
                     encryptedText = Encryption.encrypt(originalText,key.getText());
                 } catch (Exception ex) {
@@ -101,8 +101,8 @@ public class GUI {
         decrypt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String encryptedText = FileTool.readFileToString(directory+file);
-                String decryptedText;
+                byte[] encryptedText = FileTool.readFileToString(directory+file);
+                byte[] decryptedText;
                 try {
                     decryptedText = Encryption.decrypt(encryptedText,key.getText());
                 } catch (Exception ex) {
